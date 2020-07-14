@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Post;
+use Illuminate\Support\Str;
 
 class PostController extends Controller
 {
@@ -26,7 +27,7 @@ class PostController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.posts.create');
     }
 
     /**
@@ -37,7 +38,18 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'title' => 'required|max:255|unique:posts,title',
+            'content' => 'required'
+        ]);
+        $data = $request->all();
+        $slug = Str::of($data['title'])->slug('-')->__toString();
+        $data['slug'] = $slug;
+        $new_post = new Post();
+        $new_post->fill($data);
+        $new_post->save();
+        return redirect()->route('admin.posts.index');
+
     }
 
     /**
