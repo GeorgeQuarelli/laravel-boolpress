@@ -30,12 +30,6 @@ class PostController extends Controller
         return view('admin.posts.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         $request->validate([
@@ -52,47 +46,38 @@ class PostController extends Controller
 
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
         $post = Post::find($id);
         return view('admin.posts.show', compact('post'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
-        //
+        $post = Post::find($id);
+        if($post) {
+            return view('admin.posts.edit', compact('post'));
+        } else {
+            return abort('404');
+        }
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'title' => 'required|max:255|unique:posts,title'.$id,
+            'content' => 'required'
+        ]);
+        $data = $request->all();
+        $slug = Str::of($data['title'])->slug('-');
+        $data['slug'] = $slug;
+
+        $post = Post::find($id);
+        $post->update($data);
+
+        return redirect()->route('admin.posts.index');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
         $post = Post::find($id);
