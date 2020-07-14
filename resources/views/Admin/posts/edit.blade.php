@@ -16,7 +16,7 @@
                     </div>
                     <div class="form-group">
                       <label for="testo">Testo Articolo</label>
-                      <input type="text" name="content" class="form-control" id="testo" placeholder="Scrivi del testo..." value="{{ old('content', $post->content) }}">
+                      <textarea type="text" name="content" class="form-control" id="testo" placeholder="Scrivi del testo...">{{ old('content', $post->content) }}"</textarea>
                     </div>
                     <button type="submit" class="btn btn-primary">Salva</button>
                 </form>
