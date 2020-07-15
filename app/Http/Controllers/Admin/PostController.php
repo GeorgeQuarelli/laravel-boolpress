@@ -37,8 +37,11 @@ class PostController extends Controller
             'content' => 'required'
         ]);
         $data = $request->all();
-        $slug = Str::of($data['title'])->slug('-')->__toString();
+
+        $slug = Str::of($data['title'])->slug('-');
+        
         $data['slug'] = $slug;
+
         $new_post = new Post();
         $new_post->fill($data);
         $new_post->save();
@@ -71,6 +74,7 @@ class PostController extends Controller
         $data = $request->all();
         $slug = Str::of($data['title'])->slug('-');
         $data['slug'] = $slug;
+
 
         $post = Post::find($id);
         $post->update($data);
